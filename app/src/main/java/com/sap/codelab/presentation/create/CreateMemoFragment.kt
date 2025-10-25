@@ -1,12 +1,10 @@
 package com.sap.codelab.presentation.create
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doAfterTextChanged
@@ -16,26 +14,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.sap.codelab.R
 import com.sap.codelab.databinding.FragmentCreateMemoBinding
+import com.sap.codelab.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CreateMemoFragment : Fragment() {
+class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
 
-    private var _binding: FragmentCreateMemoBinding? = null
-    private val binding get() = _binding!!
-
+    private val binding by viewBinding(FragmentCreateMemoBinding::bind)
     private val viewModel: CreateMemoViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCreateMemoBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,16 +83,11 @@ class CreateMemoFragment : Fragment() {
                             findNavController().popBackStack()
                         }
                         is CreateMemoContract.UiEvent.ShowSnackbar -> {
-                            // TODO: Show snackbar
+                            Snackbar.make(binding.root, getString(event.messageResId), Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

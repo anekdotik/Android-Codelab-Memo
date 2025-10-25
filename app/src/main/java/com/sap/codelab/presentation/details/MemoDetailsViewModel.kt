@@ -3,6 +3,7 @@ package com.sap.codelab.presentation.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sap.codelab.R
 import com.sap.codelab.domain.usecase.GetMemoByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,7 @@ class MemoDetailsViewModel @Inject constructor(
     private fun loadMemo() {
         val memoId = savedStateHandle.get<Long>("memoId")
         if (memoId == null || memoId <= 0) {
-            _uiState.update { it.copy(isLoading = false, error = "Invalid Memo ID") }
+            _uiState.update { it.copy(isLoading = false, error = R.string.error_invalid_memo_id) }
             return
         }
 
@@ -38,10 +39,10 @@ class MemoDetailsViewModel @Inject constructor(
                 if (memo != null) {
                     _uiState.update { it.copy(isLoading = false, memo = memo) }
                 } else {
-                    _uiState.update { it.copy(isLoading = false, error = "Memo not found") }
+                    _uiState.update { it.copy(isLoading = false, error = R.string.error_memo_not_found) }
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+                _uiState.update { it.copy(isLoading = false, error = R.string.error_load_memo) }
             }
         }
     }

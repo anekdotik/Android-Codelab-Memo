@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-
 /**
  * The repository is used to retrieve data from a data source.
  */

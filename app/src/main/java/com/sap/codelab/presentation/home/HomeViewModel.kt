@@ -73,14 +73,14 @@ class HomeViewModel @Inject constructor(
      */
     fun onMemoCheckedChanged(memo: Memo, isChecked: Boolean) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 if (isChecked) {
                     saveMemoUseCase(memo.copy(isDone = true))
                 }
                 _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Failed to update memo") }
+                _uiState.update { it.copy(isLoading = false, error = R.string.error_update_memo) }
                 emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_update_memo))
             }
         }
@@ -107,7 +107,7 @@ class HomeViewModel @Inject constructor(
      * This should be called by the UI after it has processed and displayed a persistent error.
      */
     fun onErrorMessageCleared() {
-        _uiState.update { it.copy(errorMessage = null) }
+        _uiState.update { it.copy(error = null) }
     }
 
     /**
@@ -121,12 +121,12 @@ class HomeViewModel @Inject constructor(
         val memoFlow = if (isShowAll) getAllMemosUseCase() else getOpenMemosUseCase()
 
         loadMemosJob = memoFlow
-            .onStart { _uiState.update { it.copy(isLoading = true, errorMessage = null) } }
+            .onStart { _uiState.update { it.copy(isLoading = true, error = null) } }
             .onEach { memos ->
-                _uiState.update { it.copy(memos = memos, isShowAllMemosSelected = isShowAll, isLoading = false, errorMessage = null) }
+                _uiState.update { it.copy(memos = memos, isShowAllMemosSelected = isShowAll, isLoading = false, error = null) }
             }
             .catch { e ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
+                _uiState.update { it.copy(isLoading = false, error = R.string.error_load_memos) }
                 emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_load_memos))
             }
             .launchIn(viewModelScope)

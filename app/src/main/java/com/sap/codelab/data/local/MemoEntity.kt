@@ -3,12 +3,13 @@ package com.sap.codelab.data.local
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.sap.codelab.data.local.MemoDatabase.Companion.MEMO_TABLE_NAME
 
 /**
  * Represents a memo entity in the database.
  * This class is only used within the data layer.
  */
-@Entity(tableName = "memo")
+@Entity(tableName = MEMO_TABLE_NAME)
 internal data class MemoEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

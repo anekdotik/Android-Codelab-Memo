@@ -6,7 +6,7 @@ interface MemoDetailsContract {
     data class UiState(
         val memo: Memo? = null,
         val isLoading: Boolean = true,
-        val error: String? = null
+        val error: Int? = null
     )
 
     sealed interface UiEvent {}

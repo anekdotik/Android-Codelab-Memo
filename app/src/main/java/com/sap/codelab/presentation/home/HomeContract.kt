@@ -13,7 +13,7 @@ interface HomeContract {
     data class HomeUiState(
         val memos: List<Memo> = emptyList(),
         val isLoading: Boolean = false,
-        val errorMessage: String? = null,
+        val error: Int? = null,
         val isShowAllMemosSelected: Boolean = false
     )
 

@@ -1,12 +1,10 @@
 package com.sap.codelab.presentation.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -22,29 +20,20 @@ import com.google.android.material.snackbar.Snackbar
 import com.sap.codelab.MainActivity
 import com.sap.codelab.R
 import com.sap.codelab.databinding.FragmentHomeBinding
+import com.sap.codelab.common.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
-
+    private val binding by viewBinding(FragmentHomeBinding::bind)
     private val viewModel: HomeViewModel by viewModels()
     private val memoAdapter: MemoAdapter by lazy {
         MemoAdapter(
             onMemoClick = viewModel::onMemoClicked,
             onCheckedChange = viewModel::onMemoCheckedChanged
         )
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -133,10 +122,5 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

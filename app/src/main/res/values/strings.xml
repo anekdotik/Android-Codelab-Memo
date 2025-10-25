@@ -15,4 +15,8 @@
     <string name="nav_create_memo_label">Create Memo"</string>
     <string name="nav_memo_details_label">Memo Details</string>
     <string name="error_delete_memo">Failed to delete memo"</string>
+    <string name="error_load_memo">Failed to load memo"</string>
+    <string name="error_invalid_memo_id">Invalid memo ID"</string>
+    <string name="error_memo_not_found">Memo not found"</string>
+
 </resources>
