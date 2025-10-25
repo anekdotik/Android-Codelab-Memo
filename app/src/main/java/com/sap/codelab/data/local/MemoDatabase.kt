@@ -8,7 +8,7 @@ import com.sap.codelab.data.local.MemoDao
 /**
  * That database that is used to store information.
  */
-@Database(entities = [Memo::class], version = 1, exportSchema = false)
+@Database(entities = [MemoEntity::class], version = 1, exportSchema = false)
 internal abstract class MemoDatabase : RoomDatabase() {
 
     abstract fun getMemoDao(): MemoDao

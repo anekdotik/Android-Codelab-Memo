@@ -1,36 +1,38 @@
 package com.sap.codelab.data.repository
 
-import androidx.room.Room
-import android.content.Context
-import androidx.annotation.WorkerThread
-import com.sap.codelab.data.local.MemoDatabase
+import com.sap.codelab.data.local.MemoDao
+import com.sap.codelab.data.mapper.toDomain
+import com.sap.codelab.data.mapper.toEntity
 import com.sap.codelab.domain.model.Memo
 import com.sap.codelab.domain.repository.MemoRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-private const val DATABASE_NAME: String = "codelab"
 
 /**
  * The repository is used to retrieve data from a data source.
  */
-internal object Repository : MemoRepository {
+internal class MemoRepositoryImpl @Inject constructor(
+    private val memoDao: MemoDao
+) : MemoRepository {
 
-    private lateinit var database: MemoDatabase
-
-    fun initialize(applicationContext: Context) {
-        database = Room.databaseBuilder(applicationContext, MemoDatabase::class.java, DATABASE_NAME).build()
+    override suspend fun saveMemo(memo: Memo) {
+        memoDao.insert(memo.toEntity())
     }
 
-    @WorkerThread
-    override fun saveMemo(memo: Memo) {
-        database.getMemoDao().insert(memo)
+    override fun getOpenMemos(): Flow<List<Memo>> {
+        return memoDao.getOpen().map { entities ->
+            entities.map { it.toDomain() }
+        }
     }
 
-    @WorkerThread
-    override fun getOpen(): List<Memo> = database.getMemoDao().getOpen()
+    override fun getAllMemos(): Flow<List<Memo>> {
+        return memoDao.getAll().map { entities ->
+            entities.map { it.toDomain() }
+        }
+    }
 
-    @WorkerThread
-    override fun getAll(): List<Memo> = database.getMemoDao().getAll()
-
-    @WorkerThread
-    override fun getMemoById(id: Long): Memo = database.getMemoDao().getMemoById(id)
+    override suspend fun getMemoById(id: Long): Memo? {
+        return memoDao.getMemoById(id)?.toDomain()
+    }
 }
