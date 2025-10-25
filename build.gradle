@@ -2,8 +2,8 @@
 
 buildscript {
     ext.kotlin_version = '2.2.10'
-    ext.hiltVersion = '2.50' // ADDED: Hilt version for consistency
-    ext.navigationVersion = '2.7.7' // ADDED: Navigation version for consistency
+    ext.hiltVersion = '2.57.2'
+    ext.navigationVersion = '2.7.7'
 
     repositories {
         google()
@@ -13,7 +13,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.12.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.2.10-2.0.2"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion" // ADDED: Hilt Gradle Plugin
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     }
 }
 

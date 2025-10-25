@@ -9,35 +9,35 @@
     tools:context="com.sap.codelab.presentation.create.CreateMemoActivity"
     tools:showIn="@layout/activity_create_memo">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/memo_title_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/memo_title_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:errorEnabled="true"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/memo_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/memo_title" />
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/memo_title"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/memo_title" />-->
 
-    </com.google.android.material.textfield.TextInputLayout>
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/memo_description_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true"
-        app:layout_constraintTop_toBottomOf="@id/memo_title_container">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/memo_description_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:errorEnabled="true"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/memo_title_container">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/memo_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/memo_text" />
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/memo_description"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/memo_text" />-->
 
-    </com.google.android.material.textfield.TextInputLayout>
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

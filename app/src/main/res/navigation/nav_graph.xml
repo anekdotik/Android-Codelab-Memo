@@ -8,6 +8,15 @@
     <fragment
         android:id="@+id/nav_home_fragment"
         android:name="com.sap.codelab.presentation.home.HomeFragment"
-        android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        android:label="@string/nav_home_label"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_fragment_to_nav_create_memo_fragment"
+            app:destination="@id/nav_create_memo_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_memo_fragment"
+        android:name="com.sap.codelab.presentation.create.CreateMemoFragment"
+        android:label="@string/nav_create_memo_label"
+        tools:layout="@layout/fragment_create_memo" />
 </navigation>

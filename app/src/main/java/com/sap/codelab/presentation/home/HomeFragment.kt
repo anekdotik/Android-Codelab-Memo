@@ -14,9 +14,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.sap.codelab.MainActivity
 import com.sap.codelab.R
 import com.sap.codelab.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,7 +93,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // binding.fab.setOnClickListener { viewModel.onAddMemoClicked() }
+        (activity as? MainActivity)?.findViewById<FloatingActionButton>(R.id.fab)?.setOnClickListener {
+            viewModel.onAddMemoClicked()
+        }
     }
 
     private fun observeUiState() {
@@ -116,8 +121,8 @@ class HomeFragment : Fragment() {
                         }
 
                         HomeContract.HomeUiEvent.NavigateToCreateMemo -> {
-                            // TODO: Add navigation logic
                             // findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCreateFragment)
+                            findNavController().navigate(R.id.action_nav_home_fragment_to_nav_create_memo_fragment)
                         }
                         is HomeContract.HomeUiEvent.ShowSnackbar -> {
                             Snackbar.make(binding.root, getString(event.messageResId), Snackbar.LENGTH_SHORT).show()

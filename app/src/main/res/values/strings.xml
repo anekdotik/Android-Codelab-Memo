@@ -10,4 +10,7 @@
     <string name="memo_text_empty_error">Please provide a memo description</string>
     <string name="error_update_memo">Failed to update memo</string>
     <string name="error_load_memos">Failed to load memos"</string>
+    <string name="error_save_memo">Failed to save memo</string>
+    <string name="nav_home_label">Home</string>
+    <string name="nav_create_memo_label">Create Memo"</string>
 </resources>
