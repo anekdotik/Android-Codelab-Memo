@@ -1,27 +1,29 @@
-package com.sap.codelab.view.home
+package com.sap.codelab.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sap.codelab.R
 import com.sap.codelab.databinding.ActivityHomeBinding
-import com.sap.codelab.model.Memo
-import com.sap.codelab.view.create.CreateMemo
-import com.sap.codelab.view.detail.BUNDLE_MEMO_ID
-import com.sap.codelab.view.detail.ViewMemo
+import com.sap.codelab.domain.model.Memo
+import com.sap.codelab.presentation.create.CreateMemoActivity
+import com.sap.codelab.presentation.details.BUNDLE_MEMO_ID
+import com.sap.codelab.presentation.details.ViewMemo
+import com.sap.codelab.presentation.home.HomeViewModel
+import com.sap.codelab.presentation.home.MemoAdapter
 import kotlinx.coroutines.launch
 
 /**
  * The main activity of the app. Shows a list of recorded memos and lets the user add new memos.
  */
-internal class Home : AppCompatActivity() {
+internal class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var model: HomeViewModel
@@ -45,7 +47,7 @@ internal class Home : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             // Handles clicks on the FAB button > creates a new Memo
-            createMemoLauncher.launch(Intent(this@Home, CreateMemo::class.java))
+            createMemoLauncher.launch(Intent(this@HomeActivity, CreateMemoActivity::class.java))
         }
         model.loadOpenMemos()
     }
@@ -76,7 +78,7 @@ internal class Home : AppCompatActivity() {
      * @param memoId    - the id of the memo to be shown.
      */
     private fun showMemo(memoId: Long) {
-        val intent = Intent(this@Home, ViewMemo::class.java)
+        val intent = Intent(this@HomeActivity, ViewMemo::class.java)
         intent.putExtra(BUNDLE_MEMO_ID, memoId)
         startActivity(intent)
     }
@@ -86,9 +88,15 @@ internal class Home : AppCompatActivity() {
      */
     private fun setupRecyclerView(adapter: MemoAdapter) {
         binding.contentHome.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@Home, LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(this@HomeActivity, LinearLayoutManager.VERTICAL, false)
             this.adapter = adapter
-            addItemDecoration(DividerItemDecoration(this@Home, (layoutManager as LinearLayoutManager).orientation))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@HomeActivity,
+                    (layoutManager as LinearLayoutManager).orientation
+                )
+            )
         }
     }
 

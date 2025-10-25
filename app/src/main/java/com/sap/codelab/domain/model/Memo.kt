@@ -1,4 +1,4 @@
-package com.sap.codelab.model
+package com.sap.codelab.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

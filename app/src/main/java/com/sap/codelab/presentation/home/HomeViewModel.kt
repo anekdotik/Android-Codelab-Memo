@@ -1,10 +1,10 @@
-package com.sap.codelab.view.home
+package com.sap.codelab.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sap.codelab.model.Memo
-import com.sap.codelab.repository.Repository
-import com.sap.codelab.utils.coroutines.ScopeProvider
+import com.sap.codelab.common.utils.ScopeProvider
+import com.sap.codelab.domain.model.Memo
+import com.sap.codelab.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

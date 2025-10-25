@@ -1,21 +1,23 @@
-package com.sap.codelab.repository
+package com.sap.codelab.data.repository
 
 import androidx.room.Room
 import android.content.Context
 import androidx.annotation.WorkerThread
-import com.sap.codelab.model.Memo
+import com.sap.codelab.data.local.MemoDatabase
+import com.sap.codelab.domain.model.Memo
+import com.sap.codelab.domain.repository.MemoRepository
 
 private const val DATABASE_NAME: String = "codelab"
 
 /**
  * The repository is used to retrieve data from a data source.
  */
-internal object Repository : IMemoRepository {
+internal object Repository : MemoRepository {
 
-    private lateinit var database: Database
+    private lateinit var database: MemoDatabase
 
     fun initialize(applicationContext: Context) {
-        database = Room.databaseBuilder(applicationContext, Database::class.java, DATABASE_NAME).build()
+        database = Room.databaseBuilder(applicationContext, MemoDatabase::class.java, DATABASE_NAME).build()
     }
 
     @WorkerThread

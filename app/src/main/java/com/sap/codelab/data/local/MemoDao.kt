@@ -1,10 +1,10 @@
-package com.sap.codelab.repository
+package com.sap.codelab.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.sap.codelab.model.Memo
+import com.sap.codelab.domain.model.Memo
 
 /**
  * The Dao representation of a Memo.
@@ -27,7 +27,7 @@ internal interface MemoDao {
     /**
      * Inserts the given Memo into the database. We currently do not support updating of memos.
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     fun insert(memo: Memo)
 
     /**

@@ -1,10 +1,10 @@
-package com.sap.codelab.view.home
+package com.sap.codelab.presentation.home
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.CompoundButton
+import androidx.recyclerview.widget.RecyclerView
 import com.sap.codelab.databinding.RecyclerviewMemoBinding
-import com.sap.codelab.model.Memo
+import com.sap.codelab.domain.model.Memo
 
 /**
  * View holder for Memos.

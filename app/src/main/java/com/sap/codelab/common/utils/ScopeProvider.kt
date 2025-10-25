@@ -1,6 +1,9 @@
-package com.sap.codelab.utils.coroutines
+package com.sap.codelab.common.utils
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlin.coroutines.EmptyCoroutineContext
 
 /**
@@ -9,7 +12,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 internal object ScopeProvider {
 
     /**
-     * Creates an application scope as an alternative for [GlobalScope] which can be used by other libraries.
+     * Creates an application scope as an alternative for [kotlinx.coroutines.GlobalScope] which can be used by other libraries.
      * This scope should be used for top-level coroutines which are operating on the whole application lifetime and are not cancelled prematurely.
      */
     val application by lazy { CoroutineScope(EmptyCoroutineContext) }

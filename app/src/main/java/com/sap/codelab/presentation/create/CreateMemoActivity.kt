@@ -1,19 +1,20 @@
-package com.sap.codelab.view.create
+package com.sap.codelab.presentation.create
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.sap.codelab.R
+import com.sap.codelab.common.utils.empty
 import com.sap.codelab.databinding.ActivityCreateMemoBinding
-import com.sap.codelab.utils.extensions.empty
+import com.sap.codelab.presentation.create.CreateMemoViewModel
 
 /**
  * Activity that allows a user to create a new Memo.
  */
-internal class CreateMemo : AppCompatActivity() {
+internal class CreateMemoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateMemoBinding
     private lateinit var model: CreateMemoViewModel
@@ -73,7 +74,7 @@ internal class CreateMemo : AppCompatActivity() {
         return if (hasError) {
             getString(errorMessageResId)
         } else {
-            String.empty()
+            String.Companion.empty()
         }
     }
 }
