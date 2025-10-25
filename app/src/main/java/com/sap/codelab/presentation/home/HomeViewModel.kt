@@ -2,63 +2,141 @@ package com.sap.codelab.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sap.codelab.common.utils.ScopeProvider
+import com.sap.codelab.R
 import com.sap.codelab.domain.model.Memo
-import com.sap.codelab.data.repository.Repository
-import kotlinx.coroutines.Dispatchers
+import com.sap.codelab.domain.usecase.GetAllMemosUseCase
+import com.sap.codelab.domain.usecase.GetOpenMemosUseCase
+import com.sap.codelab.domain.usecase.SaveMemoUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for the Home Activity.
- */
-internal class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val getAllMemosUseCase: GetAllMemosUseCase,
+    private val getOpenMemosUseCase: GetOpenMemosUseCase,
+    private val saveMemoUseCase: SaveMemoUseCase
+) : ViewModel() {
 
-    private var isShowAll = false
-    private val _memos: MutableStateFlow<List<Memo>> = MutableStateFlow(listOf())
-    val memos: StateFlow<List<Memo>> = _memos
+    // Represents the current UI state
+    private val _uiState = MutableStateFlow(HomeContract.HomeUiState())
+    val uiState = _uiState.asStateFlow()
 
-    /**
-     * Loads all memos.
-     */
-    fun loadAllMemos() {
-        isShowAll = true
-        viewModelScope.launch(Dispatchers.Default) {
-            _memos.value = Repository.getAll()
-        }
+    // Represents one-time UI events
+    private val _uiEvent = MutableSharedFlow<HomeContract.HomeUiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    private var loadMemosJob: Job? = null
+
+    init {
+        onShowOpenMemosSelected()
     }
 
     /**
-     * Loads all open (not done) memos.
+     * Handles the user action to show all memos
      */
-    fun loadOpenMemos() {
-        isShowAll = false
-        viewModelScope.launch(Dispatchers.Default) {
-            _memos.value = Repository.getOpen()
-        }
-    }
-
-    fun refreshMemos() {
-        if (isShowAll) {
-            loadAllMemos()
-        } else {
-            loadOpenMemos()
-        }
+    fun onShowAllMemosSelected() {
+        loadMemos(isShowAll = true)
     }
 
     /**
-     * Updates the given memo, marking it as done if isChecked is true.
-     *
-     * @param memo      - the memo to update.
-     * @param isChecked - whether the memo has been checked (marked as done).
+     * Handles the user action to show only open memos
      */
-    fun updateMemo(memo: Memo, isChecked: Boolean) {
-        ScopeProvider.application.launch(Dispatchers.Default) {
-            // We'll only forward the update if the memo has been checked, since we don't offer to uncheck memos right now
-            if (isChecked) {
-                Repository.saveMemo(memo.copy(isDone = true))
+    fun onShowOpenMemosSelected() {
+        loadMemos(isShowAll = false)
+    }
+
+    /**
+     * Handles the user action of clicking on a memo in the list.
+     * Emits a navigation event to the UI.
+     * @param memoId The ID of the clicked memo.
+     */
+    fun onMemoClicked(memoId: Long) {
+        emitUiEvent(HomeContract.HomeUiEvent.NavigateToMemoDetail(memoId))
+    }
+
+    /**
+     * Handles the user action of checking/unchecking a memo's completion status.
+     * Updates the memo status and handles potential errors.
+     * @param memo The memo to update.
+     * @param isChecked The new checked status.
+     */
+    fun onMemoCheckedChanged(memo: Memo, isChecked: Boolean) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            try {
+                if (isChecked) {
+                    saveMemoUseCase(memo.copy(isDone = true))
+                }
+                _uiState.update { it.copy(isLoading = false) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Failed to update memo") }
+                emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_update_memo))
             }
+        }
+    }
+
+    /**
+     * Handles the user action of clicking the FAB to add a new memo.
+     * Emits a navigation event to the UI.
+     */
+    fun onAddMemoClicked() {
+        emitUiEvent(HomeContract.HomeUiEvent.NavigateToCreateMemo)
+    }
+
+    /**
+     * Call this when the Create Memo screen returns successfully, to refresh the list.
+     * Refreshes the memo list based on the current filter.
+     */
+    fun onCreateMemoSuccess() {
+        loadMemos(isShowAll = _uiState.value.isShowAllMemosSelected)
+    }
+
+    /**
+     * Clears any error message displayed in the UI's UiState.
+     * This should be called by the UI after it has processed and displayed a persistent error.
+     */
+    fun onErrorMessageCleared() {
+        _uiState.update { it.copy(errorMessage = null) }
+    }
+
+    /**
+     * Loads memos from the repository based on the filter (show all or only open).
+     * Manages loading state, error state, and updates the UiState.
+     * @param isShowAll If true, loads all memos; otherwise, loads only open memos.
+     */
+    private fun loadMemos(isShowAll: Boolean) {
+        loadMemosJob?.cancel() // Cancel any previous collection job to avoid multiple listeners
+
+        val memoFlow = if (isShowAll) getAllMemosUseCase() else getOpenMemosUseCase()
+
+        loadMemosJob = memoFlow
+            .onStart { _uiState.update { it.copy(isLoading = true, errorMessage = null) } }
+            .onEach { memos ->
+                _uiState.update { it.copy(memos = memos, isShowAllMemosSelected = isShowAll, isLoading = false, errorMessage = null) }
+            }
+            .catch { e ->
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
+                emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_load_memos))
+            }
+            .launchIn(viewModelScope)
+    }
+
+    /**
+     * Emits a one-time UI event to the SharedFlow.
+     * @param event The HomeUiEvent to emit.
+     */
+    private fun emitUiEvent(event: HomeContract.HomeUiEvent) {
+        viewModelScope.launch {
+            _uiEvent.emit(event)
         }
     }
 }

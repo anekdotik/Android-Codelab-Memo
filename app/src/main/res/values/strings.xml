@@ -8,4 +8,6 @@
     <string name="action_save">Save</string>
     <string name="memo_title_empty_error">Please provide a title for this memo</string>
     <string name="memo_text_empty_error">Please provide a memo description</string>
+    <string name="error_update_memo">Failed to update memo</string>
+    <string name="error_load_memos">Failed to load memos"</string>
 </resources>
