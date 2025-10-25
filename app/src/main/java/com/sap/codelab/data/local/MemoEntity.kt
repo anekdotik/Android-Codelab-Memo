@@ -24,10 +24,10 @@ internal data class MemoEntity(
     val reminderDate: Long,
 
     @ColumnInfo(name = "reminderLatitude")
-    val reminderLatitude: Long, // Consider changing to Double for precision
+    val reminderLatitude: Double,
 
     @ColumnInfo(name = "reminderLongitude")
-    val reminderLongitude: Long, // Consider changing to Double for precision
+    val reminderLongitude: Double,
 
     @ColumnInfo(name = "isDone")
     val isDone: Boolean = false
