@@ -116,13 +116,12 @@ class HomeFragment : Fragment() {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
                         is HomeContract.HomeUiEvent.NavigateToMemoDetail -> {
-                            // TODO: Add navigation logic
-                            // findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.memoId))
+                            val action = HomeFragmentDirections.actionNavHomeFragmentToNavMemoDetailsFragment(event.memoId)
+                            findNavController().navigate(action)
                         }
-
                         HomeContract.HomeUiEvent.NavigateToCreateMemo -> {
-                            // findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCreateFragment)
-                            findNavController().navigate(R.id.action_nav_home_fragment_to_nav_create_memo_fragment)
+                            val action = HomeFragmentDirections.actionNavHomeFragmentToNavCreateMemoFragment()
+                             findNavController().navigate(action)
                         }
                         is HomeContract.HomeUiEvent.ShowSnackbar -> {
                             Snackbar.make(binding.root, getString(event.messageResId), Snackbar.LENGTH_SHORT).show()

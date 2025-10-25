@@ -13,10 +13,22 @@
         <action
             android:id="@+id/action_nav_home_fragment_to_nav_create_memo_fragment"
             app:destination="@id/nav_create_memo_fragment" />
+        <action
+            android:id="@+id/action_nav_home_fragment_to_nav_memo_details_fragment"
+            app:destination="@id/nav_memo_details_fragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_create_memo_fragment"
         android:name="com.sap.codelab.presentation.create.CreateMemoFragment"
         android:label="@string/nav_create_memo_label"
         tools:layout="@layout/fragment_create_memo" />
+    <fragment
+        android:id="@+id/nav_memo_details_fragment"
+        android:name="com.sap.codelab.presentation.details.MemoDetailsFragment"
+        android:label="@string/nav_memo_details_label"
+        tools:layout="@layout/fragment_memo_details">
+        <argument
+            android:name="memoId"
+            app:argType="long" />
+    </fragment>
 </navigation>

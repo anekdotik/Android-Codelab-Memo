@@ -13,4 +13,6 @@
     <string name="error_save_memo">Failed to save memo</string>
     <string name="nav_home_label">Home</string>
     <string name="nav_create_memo_label">Create Memo"</string>
+    <string name="nav_memo_details_label">Memo Details</string>
+    <string name="error_delete_memo">Failed to delete memo"</string>
 </resources>
