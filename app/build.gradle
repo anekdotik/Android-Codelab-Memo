@@ -4,6 +4,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.devtools.ksp'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -13,6 +14,7 @@ android {
     defaultConfig {
         applicationId "com.sap.codelab"
         minSdkVersion 27
+        targetSdk 36
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -44,6 +46,8 @@ ext {
     kotlinCoroutinesVersion = '1.10.2'
     roomVersion = '2.7.2'
     lifecycleVersion = '2.9.3'
+    hiltVersion = rootProject.ext.hiltVersion
+    navigationVersion = rootProject.ext.navigationVersion
 }
 
 dependencies {
@@ -66,6 +70,12 @@ dependencies {
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    ksp "com.google.dagger:hilt-compiler:$hiltVersion"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'

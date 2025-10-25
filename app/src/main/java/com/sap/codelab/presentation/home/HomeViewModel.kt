@@ -7,6 +7,7 @@ import com.sap.codelab.domain.model.Memo
 import com.sap.codelab.domain.usecase.GetAllMemosUseCase
 import com.sap.codelab.domain.usecase.GetOpenMemosUseCase
 import com.sap.codelab.domain.usecase.SaveMemoUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
