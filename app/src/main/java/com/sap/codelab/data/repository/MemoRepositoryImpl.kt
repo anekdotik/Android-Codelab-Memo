@@ -8,10 +8,12 @@ import com.sap.codelab.domain.repository.MemoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * The repository is used to retrieve data from a data source.
  */
+@Singleton
 internal class MemoRepositoryImpl @Inject constructor(
     private val memoDao: MemoDao
 ) : MemoRepository {
