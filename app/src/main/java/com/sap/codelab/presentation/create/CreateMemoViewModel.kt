@@ -64,17 +64,19 @@ class CreateMemoViewModel @Inject constructor(
         val currentState = _uiState.value
         if (!validateInput(currentState.title, currentState.description)) return
 
-        if (currentState.selectedLocation != null) {
-            when {
-                !hasBackgroundPermission -> {
-                    emitUiEvent(CreateMemoContract.UiEvent.ShowBackgroundLocationRationale)
-                    return
-                }
+        if (currentState.selectedLocation == null) {
+            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_location_not_selected))
+            return
+        }
 
-                !hasNotificationPermission -> {
-                    emitUiEvent(CreateMemoContract.UiEvent.RequestNotificationPermission)
-                    return
-                }
+        when {
+            !hasBackgroundPermission -> {
+                emitUiEvent(CreateMemoContract.UiEvent.ShowBackgroundLocationRationale)
+                return
+            }
+            !hasNotificationPermission -> {
+                emitUiEvent(CreateMemoContract.UiEvent.RequestNotificationPermission)
+                return
             }
         }
 

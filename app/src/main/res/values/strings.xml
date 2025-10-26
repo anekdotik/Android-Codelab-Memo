@@ -32,6 +32,6 @@
     <string name="background_location_permission_denied">Reminder won\'t work in the background without this permission</string>
     <string name="background_location_permission_title">Background location permission required</string>
     <string name="background_location_permission_message">To send you reminders when you arrive at a location even when the app is closed, please grant the \"Allow all the time\" location permission.</string>
-
+    <string name="error_location_not_selected">Please select a location for the reminder</string>
 
 </resources>
