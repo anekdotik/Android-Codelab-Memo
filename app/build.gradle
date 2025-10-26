@@ -8,6 +8,20 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+def secretProps = new Properties()
+def defaultsFile = rootProject.file("local.defaults.properties")
+if (defaultsFile.exists()) {
+    defaultsFile.withReader('UTF-8') { reader ->
+        secretProps.load(reader)
+    }
+}
+def secretsFile = rootProject.file("secrets.properties")
+if (secretsFile.exists()) {
+    secretsFile.withReader('UTF-8') { reader ->
+        secretProps.load(reader)
+    }
+}
+
 android {
     namespace "com.sap.codelab"
     compileSdk = 36
@@ -19,6 +33,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        manifestPlaceholders = [
+                mapsApiKey: secretProps.getProperty('MAPS_API_KEY')
+        ]
     }
     buildTypes {
         release {
@@ -71,6 +88,11 @@ dependencies {
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+
+    // Google Play Services
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'com.google.android.gms:play-services-maps:19.2.0'
+
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     ksp "com.google.dagger:hilt-compiler:$hiltVersion"
