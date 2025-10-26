@@ -28,7 +28,7 @@ internal interface MemoDao {
      * Inserts the given Memo into the database. We currently do not support updating of memos.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(memo: MemoEntity)
+    suspend fun insert(memo: MemoEntity): Long
 
     /**
      * @return the memo whose id matches the given id.

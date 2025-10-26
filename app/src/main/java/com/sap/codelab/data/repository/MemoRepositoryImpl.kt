@@ -18,8 +18,8 @@ internal class MemoRepositoryImpl @Inject constructor(
     private val memoDao: MemoDao
 ) : MemoRepository {
 
-    override suspend fun saveMemo(memo: Memo) {
-        memoDao.insert(memo.toEntity())
+    override suspend fun saveMemo(memo: Memo): Long {
+        return memoDao.insert(memo.toEntity())
     }
 
     override fun getOpenMemos(): Flow<List<Memo>> {

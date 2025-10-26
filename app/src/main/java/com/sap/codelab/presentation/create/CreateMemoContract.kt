@@ -15,8 +15,13 @@ interface CreateMemoContract {
     sealed interface UiEvent {
         data class ShowSnackbar(val messageResId: Int) : UiEvent
         data object NavigateBack : UiEvent
+
         data object RequestFineLocationPermission : UiEvent
         data object ShowPermissionRationale : UiEvent
         data object NavigateToSelectLocation : UiEvent
+
+        data object ShowBackgroundLocationRationale : UiEvent
+        data object RequestBackgroundLocationPermission : UiEvent
+        data object RequestNotificationPermission : UiEvent
     }
 }

@@ -14,7 +14,11 @@ class SaveMemoUseCase @Inject constructor(
     private val geofenceRepository: GeofenceRepository
 ) {
     suspend operator fun invoke(memo: Memo) {
-        memoRepository.saveMemo(memo)
-        geofenceRepository.addGeofence(memo)
+        val newId = memoRepository.saveMemo(memo)
+
+        if (memo.reminderLatitude != 0.0 || memo.reminderLongitude != 0.0) {
+            val memoWithId = memo.copy(id = newId)
+            geofenceRepository.addGeofence(memoWithId)
+        }
     }
 }

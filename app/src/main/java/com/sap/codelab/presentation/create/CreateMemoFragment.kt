@@ -2,6 +2,7 @@ package com.sap.codelab.presentation.create
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -35,13 +36,23 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
     private val binding by viewBinding(FragmentCreateMemoBinding::bind)
     private val viewModel: CreateMemoViewModel by viewModels()
 
-    private val locationPermissionRequestLauncher =
+    private val fineLocationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 viewModel.onLocationPermissionGranted()
             } else {
                 Snackbar.make(binding.root, R.string.location_permission_denied_message, Snackbar.LENGTH_LONG).show()
             }
+        }
+
+    private val backgroundLocationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            viewModel.onBackgroundPermissionResult(isGranted, hasNotificationPermission())
+        }
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            viewModel.onNotificationPermissionResult(isGranted)
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,9 +71,7 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
             val hasPermission = ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
-
             val shouldShowRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-
             viewModel.onAddLocationClicked(hasPermission, shouldShowRationale)
         }
 
@@ -102,9 +111,18 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
                             val action = CreateMemoFragmentDirections.actionNavCreateMemoFragmentToNavSelectLocationFragment()
                             findNavController().navigate(action)
                         }
-                        is CreateMemoContract.UiEvent.ShowPermissionRationale -> showPermissionRationaleDialog()
+                        is CreateMemoContract.UiEvent.ShowPermissionRationale -> showFineLocationPermissionRationaleDialog()
                         is CreateMemoContract.UiEvent.RequestFineLocationPermission -> {
-                            locationPermissionRequestLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                            fineLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                        }
+                        is CreateMemoContract.UiEvent.ShowBackgroundLocationRationale -> showBackgroundLocationRationale()
+                        is CreateMemoContract.UiEvent.RequestBackgroundLocationPermission -> {
+                            backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                        }
+                        is CreateMemoContract.UiEvent.RequestNotificationPermission -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
                         }
                     }
                 }
@@ -112,15 +130,42 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
         }
     }
 
-    private fun showPermissionRationaleDialog() {
+    private fun showFineLocationPermissionRationaleDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.location_permission_rationale_title)
             .setMessage(R.string.location_permission_rationale_message)
             .setPositiveButton(R.string.ok) { _, _ ->
-                locationPermissionRequestLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                fineLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private fun showBackgroundLocationRationale() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.background_location_permission_title)
+            .setMessage(R.string.background_location_permission_message)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                viewModel.onBackgroundRationaleAccepted()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun hasBackgroundPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            true
+        } else {
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun hasNotificationPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            true
+        } else {
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     private fun setupMenu() {
@@ -130,13 +175,11 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
                 menuInflater.inflate(R.menu.menu_create_memo, menu)
             }
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.action_save -> {
-                        viewModel.onSaveClicked()
-                        true
-                    }
-                    else -> false
+                if (menuItem.itemId == R.id.action_save) {
+                    viewModel.onSaveClicked(hasBackgroundPermission(), hasNotificationPermission())
+                    return true
                 }
+                return false
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }

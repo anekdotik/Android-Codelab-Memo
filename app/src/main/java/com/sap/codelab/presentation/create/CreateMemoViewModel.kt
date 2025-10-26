@@ -57,26 +57,70 @@ class CreateMemoViewModel @Inject constructor(
         _uiState.update { it.copy(selectedLocation = location) }
     }
 
-    fun onSaveClicked() {
+    fun onSaveClicked(
+        hasBackgroundPermission: Boolean,
+        hasNotificationPermission: Boolean
+    ) {
         val currentState = _uiState.value
-        if (!validateInput(currentState.title, currentState.description)) {
-            return
+        if (!validateInput(currentState.title, currentState.description)) return
+
+        if (currentState.selectedLocation != null) {
+            when {
+                !hasBackgroundPermission -> {
+                    emitUiEvent(CreateMemoContract.UiEvent.ShowBackgroundLocationRationale)
+                    return
+                }
+
+                !hasNotificationPermission -> {
+                    emitUiEvent(CreateMemoContract.UiEvent.RequestNotificationPermission)
+                    return
+                }
+            }
         }
 
-        viewModelScope.launch {
-            try {
-                val newMemo = Memo(
-                    title = currentState.title,
-                    description = currentState.description,
-                    reminderLatitude = currentState.selectedLocation?.latitude ?: 0.0,
-                    reminderLongitude = currentState.selectedLocation?.longitude ?: 0.0
-                )
-                saveMemoUseCase(newMemo)
-                _uiState.update { it.copy(isMemoSaved = true) }
-                _uiEvent.emit(CreateMemoContract.UiEvent.NavigateBack)
-            } catch (e: Exception) {
-                _uiEvent.emit(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_save_memo))
-            }
+        saveMemoAndGeofence()
+    }
+
+    private fun saveMemoAndGeofence() = viewModelScope.launch {
+        val currentState = _uiState.value
+        try {
+            val newMemo = Memo(
+                title = currentState.title.trim(),
+                description = currentState.description.trim(),
+                reminderLatitude = currentState.selectedLocation?.latitude ?: 0.0,
+                reminderLongitude = currentState.selectedLocation?.longitude ?: 0.0
+            )
+            saveMemoUseCase(newMemo)
+            _uiState.update { it.copy(isMemoSaved = true) }
+            _uiEvent.emit(CreateMemoContract.UiEvent.NavigateBack)
+        } catch (e: Exception) {
+            _uiEvent.emit(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_save_memo))
+        }
+    }
+
+    fun onBackgroundRationaleAccepted() {
+        emitUiEvent(CreateMemoContract.UiEvent.RequestBackgroundLocationPermission)
+    }
+
+    fun onBackgroundPermissionResult(isGranted: Boolean, hasNotificationPermission: Boolean) {
+        if (isGranted) {
+            onSaveClicked(
+                hasBackgroundPermission = true,
+                hasNotificationPermission = hasNotificationPermission
+            )
+        } else {
+            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.background_location_permission_denied))
+        }
+    }
+
+    fun onNotificationPermissionResult(isGranted: Boolean) {
+        if (isGranted) {
+            onSaveClicked(
+                hasBackgroundPermission = true,
+                hasNotificationPermission = true
+            )
+        } else {
+            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.notification_permission_denied))
         }
     }
 
@@ -91,5 +135,9 @@ class CreateMemoViewModel @Inject constructor(
             isValid = false
         }
         return isValid
+    }
+
+    private fun emitUiEvent(event: CreateMemoContract.UiEvent) {
+        viewModelScope.launch { _uiEvent.emit(event) }
     }
 }

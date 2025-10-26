@@ -28,5 +28,10 @@
     <string name="location_permission_rationale_message">Location permission is required to set a location reminder for this memo</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="notification_permission_denied">Reminder notifications cannot be shown without this permission</string>
+    <string name="background_location_permission_denied">Reminder won\'t work in the background without this permission</string>
+    <string name="background_location_permission_title">Background location permission required</string>
+    <string name="background_location_permission_message">To send you reminders when you arrive at a location even when the app is closed, please grant the \"Allow all the time\" location permission.</string>
+
 
 </resources>

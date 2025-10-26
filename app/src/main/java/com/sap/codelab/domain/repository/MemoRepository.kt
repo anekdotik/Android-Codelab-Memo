@@ -11,7 +11,7 @@ interface MemoRepository {
     /**
      * Saves the given memo to the database.
      */
-    suspend fun saveMemo(memo: Memo)
+    suspend fun saveMemo(memo: Memo): Long
 
     /**
      * @return a Flow of all memos.

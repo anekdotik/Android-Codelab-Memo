@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.sap.codelab.MainActivity
 import com.sap.codelab.R
