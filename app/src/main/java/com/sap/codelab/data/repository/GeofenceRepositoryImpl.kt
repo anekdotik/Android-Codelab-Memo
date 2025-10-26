@@ -27,7 +27,7 @@ class GeofenceRepositoryImpl @Inject constructor(
         val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
         PendingIntent.getBroadcast(
             context,
-            0,
+            GEOFENCE_INTENT_REQUEST_CODE,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
@@ -74,5 +74,6 @@ class GeofenceRepositoryImpl @Inject constructor(
     companion object {
         private const val TAG = "GeofenceRepository"
         private const val GEOFENCE_RADIUS_IN_METERS = 200f
+        private const val GEOFENCE_INTENT_REQUEST_CODE = 0
     }
 }

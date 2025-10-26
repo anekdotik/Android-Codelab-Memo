@@ -15,8 +15,8 @@ internal abstract class MemoDatabase : RoomDatabase() {
 
     companion object {
         const val DATABASE_NAME = "memo_database"
-        const val DATABASE_VERSION = 1
-        const val DATABASE_EXPORT_SCHEME = false
+        private const val DATABASE_VERSION = 1
+        private const val DATABASE_EXPORT_SCHEME = false
         const val MEMO_TABLE_NAME = "memo"
     }
 }

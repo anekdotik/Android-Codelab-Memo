@@ -11,6 +11,7 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.sap.codelab.MainActivity
 import com.sap.codelab.R
 import com.sap.codelab.domain.model.Memo
+import com.sap.codelab.presentation.details.MemoDetailsFragmentArgs
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,10 +29,10 @@ class NotificationManager @Inject constructor(@ApplicationContext private val co
         if (systemNotificationManager.getNotificationChannel(CHANNEL_ID) == null) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                CHANNEL_NAME,
+                context.getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Channel for location-based memo reminders"
+                description = context.getString(R.string.notification_channel_description)
                 setShowBadge(true)
             }
             systemNotificationManager.createNotificationChannel(channel)
@@ -44,13 +45,12 @@ class NotificationManager @Inject constructor(@ApplicationContext private val co
     fun showNotification(memo: Memo) {
         val contentText = memo.description.take(MAX_CONTENT_LENGTH)
 
+        val args = MemoDetailsFragmentArgs(memo.id).toBundle()
         val pendingIntent: PendingIntent = NavDeepLinkBuilder(context)
             .setComponentName(MainActivity::class.java)
             .setGraph(R.navigation.nav_graph)
             .setDestination(R.id.nav_memo_details_fragment)
-            .setArguments(
-                bundleOf("memoId" to memo.id)
-            )
+            .setArguments(args)
             .createPendingIntent()
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -70,7 +70,6 @@ class NotificationManager @Inject constructor(@ApplicationContext private val co
     companion object {
         private const val TAG = "NotificationHelper"
         private const val CHANNEL_ID = "memo_reminders_channel"
-        private const val CHANNEL_NAME = "Memo Reminders"
         private const val MAX_CONTENT_LENGTH = 140
     }
 }

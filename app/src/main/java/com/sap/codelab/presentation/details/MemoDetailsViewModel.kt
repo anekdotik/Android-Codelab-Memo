@@ -18,6 +18,8 @@ class MemoDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private val args = MemoDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
+
     private val _uiState = MutableStateFlow(MemoDetailsContract.UiState())
     val uiState = _uiState.asStateFlow()
 
@@ -26,8 +28,8 @@ class MemoDetailsViewModel @Inject constructor(
     }
 
     private fun loadMemo() {
-        val memoId = savedStateHandle.get<Long>("memoId")
-        if (memoId == null || memoId <= 0) {
+        val memoId = args.memoId
+        if (memoId <= 0) {
             _uiState.update { it.copy(isLoading = false, error = R.string.error_invalid_memo_id) }
             return
         }

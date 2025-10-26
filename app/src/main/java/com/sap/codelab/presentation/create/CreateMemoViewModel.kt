@@ -2,6 +2,7 @@ package com.sap.codelab.presentation.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.sap.codelab.R
 import com.sap.codelab.domain.model.Memo
 import com.sap.codelab.domain.usecase.SaveMemoUseCase
@@ -36,22 +37,39 @@ class CreateMemoViewModel @Inject constructor(
         _uiState.update { it.copy(description = description, descriptionError = null) }
     }
 
-    fun onSaveClicked() {
-        val title = _uiState.value.title.trim()
-        val description = _uiState.value.description.trim()
+    fun onAddLocationClicked(hasPermission: Boolean, shouldShowRationale: Boolean) {
+        viewModelScope.launch {
+            when {
+                hasPermission -> _uiEvent.emit(CreateMemoContract.UiEvent.NavigateToSelectLocation)
+                shouldShowRationale -> _uiEvent.emit(CreateMemoContract.UiEvent.ShowPermissionRationale)
+                else -> _uiEvent.emit(CreateMemoContract.UiEvent.RequestFineLocationPermission)
+            }
+        }
+    }
 
-        if (!validateInput(title, description)) {
+    fun onLocationPermissionGranted() {
+        viewModelScope.launch {
+            _uiEvent.emit(CreateMemoContract.UiEvent.NavigateToSelectLocation)
+        }
+    }
+
+    fun onLocationSelected(location: LatLng) {
+        _uiState.update { it.copy(selectedLocation = location) }
+    }
+
+    fun onSaveClicked() {
+        val currentState = _uiState.value
+        if (!validateInput(currentState.title, currentState.description)) {
             return
         }
 
         viewModelScope.launch {
             try {
                 val newMemo = Memo(
-                    title = title,
-                    description = description,
-                    reminderDate = 0,
-                    reminderLatitude = 0.0,
-                    reminderLongitude = 0.0
+                    title = currentState.title,
+                    description = currentState.description,
+                    reminderLatitude = currentState.selectedLocation?.latitude ?: 0.0,
+                    reminderLongitude = currentState.selectedLocation?.longitude ?: 0.0
                 )
                 saveMemoUseCase(newMemo)
                 _uiState.update { it.copy(isMemoSaved = true) }

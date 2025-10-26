@@ -21,7 +21,11 @@
         android:id="@+id/nav_create_memo_fragment"
         android:name="com.sap.codelab.presentation.create.CreateMemoFragment"
         android:label="@string/nav_create_memo_label"
-        tools:layout="@layout/fragment_create_memo" />
+        tools:layout="@layout/fragment_create_memo" >
+        <action
+            android:id="@+id/action_nav_create_memo_fragment_to_nav_select_location_fragment"
+            app:destination="@id/nav_select_location_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_memo_details_fragment"
         android:name="com.sap.codelab.presentation.details.MemoDetailsFragment"
@@ -31,4 +35,9 @@
             android:name="memoId"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_select_location_fragment"
+        android:name="com.sap.codelab.presentation.location.SelectLocationFragment"
+        android:label="@string/nav_select_location_label"
+        tools:layout="@layout/fragment_select_location" />
 </navigation>

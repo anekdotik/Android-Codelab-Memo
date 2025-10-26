@@ -18,5 +18,15 @@
     <string name="error_load_memo">Failed to load memo"</string>
     <string name="error_invalid_memo_id">Invalid memo ID"</string>
     <string name="error_memo_not_found">Memo not found"</string>
+    <string name="notification_channel_name">Memo Reminders</string>
+    <string name="notification_channel_description">Channel for location-based memo reminders"</string>
+    <string name="nav_select_location_label">Select Location</string>
+    <string name="location_permission_denied_message">Location permission denied</string>
+    <string name="location_coordinates">Location: %f, %f</string>
+    <string name="no_location_selected">No location selected</string>
+    <string name="location_permission_rationale_title">Location permission required</string>
+    <string name="location_permission_rationale_message">Location permission is required to set a location reminder for this memo</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
 </resources>
