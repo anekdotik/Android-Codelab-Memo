@@ -80,8 +80,8 @@ class HomeViewModel @Inject constructor(
                 }
                 _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = R.string.error_update_memo) }
-                emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_update_memo))
+                _uiState.update { it.copy(isLoading = false, error = R.string.error_message_memo_update_failed) }
+                emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_message_memo_update_failed))
             }
         }
     }
@@ -126,8 +126,8 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(memos = memos, isShowAllMemosSelected = isShowAll, isLoading = false, error = null) }
             }
             .catch { e ->
-                _uiState.update { it.copy(isLoading = false, error = R.string.error_load_memos) }
-                emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_load_memos))
+                _uiState.update { it.copy(isLoading = false, error = R.string.error_message_memos_load_failed) }
+                emitUiEvent(HomeContract.HomeUiEvent.ShowSnackbar(R.string.error_message_memos_load_failed))
             }
             .launchIn(viewModelScope)
     }

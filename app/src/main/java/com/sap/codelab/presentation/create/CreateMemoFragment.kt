@@ -41,7 +41,7 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
             if (isGranted) {
                 viewModel.onLocationPermissionGranted()
             } else {
-                Snackbar.make(binding.root, R.string.location_permission_denied_message, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, R.string.permission_dialog_fine_location_denied_message, Snackbar.LENGTH_LONG).show()
             }
         }
 
@@ -89,9 +89,9 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
                     binding.memoDescriptionContainer.error = state.descriptionError?.let { getString(it) }
 
                     state.selectedLocation?.let {
-                        binding.locationText.text = getString(R.string.location_coordinates, it.latitude, it.longitude)
+                        binding.locationText.text = getString(R.string.create_memo_location_coordinates, it.latitude, it.longitude)
                     } ?: run {
-                        binding.locationText.text = getString(R.string.no_location_selected)
+                        binding.locationText.text = getString(R.string.create_memo_no_location_selected)
                     }
                 }
             }
@@ -117,7 +117,9 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
                         }
                         is CreateMemoContract.UiEvent.ShowBackgroundLocationRationale -> showBackgroundLocationRationale()
                         is CreateMemoContract.UiEvent.RequestBackgroundLocationPermission -> {
-                            backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                            }
                         }
                         is CreateMemoContract.UiEvent.RequestNotificationPermission -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -132,23 +134,23 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
 
     private fun showFineLocationPermissionRationaleDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.location_permission_rationale_title)
-            .setMessage(R.string.location_permission_rationale_message)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setTitle(R.string.permission_dialog_fine_location_rationale_title)
+            .setMessage(R.string.permission_dialog_fine_location_rationale_message)
+            .setPositiveButton(R.string.button_action_ok) { _, _ ->
                 fineLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(R.string.button_action_cancel, null)
             .show()
     }
 
     private fun showBackgroundLocationRationale() {
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.background_location_permission_title)
-            .setMessage(R.string.background_location_permission_message)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setTitle(R.string.permission_dialog_background_location_rationale_title)
+            .setMessage(R.string.permission_dialog_background_location_rationale_message)
+            .setPositiveButton(R.string.button_action_ok) { _, _ ->
                 viewModel.onBackgroundRationaleAccepted()
             }
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(R.string.button_action_cancel, null)
             .show()
     }
 

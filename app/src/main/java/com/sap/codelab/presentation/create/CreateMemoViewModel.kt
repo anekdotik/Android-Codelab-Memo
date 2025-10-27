@@ -65,7 +65,7 @@ class CreateMemoViewModel @Inject constructor(
         if (!validateInput(currentState.title, currentState.description)) return
 
         if (currentState.selectedLocation == null) {
-            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_location_not_selected))
+            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_message_location_not_selected))
             return
         }
 
@@ -96,7 +96,7 @@ class CreateMemoViewModel @Inject constructor(
             _uiState.update { it.copy(isMemoSaved = true) }
             _uiEvent.emit(CreateMemoContract.UiEvent.NavigateBack)
         } catch (e: Exception) {
-            _uiEvent.emit(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_save_memo))
+            _uiEvent.emit(CreateMemoContract.UiEvent.ShowSnackbar(R.string.error_message_memo_save_failed))
         }
     }
 
@@ -111,7 +111,7 @@ class CreateMemoViewModel @Inject constructor(
                 hasNotificationPermission = hasNotificationPermission
             )
         } else {
-            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.background_location_permission_denied))
+            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.permission_dialog_background_location_denied_message))
         }
     }
 
@@ -122,18 +122,18 @@ class CreateMemoViewModel @Inject constructor(
                 hasNotificationPermission = true
             )
         } else {
-            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.notification_permission_denied))
+            emitUiEvent(CreateMemoContract.UiEvent.ShowSnackbar(R.string.permission_dialog_notifications_denied_message))
         }
     }
 
     private fun validateInput(title: String, description: String): Boolean {
         var isValid = true
         if (title.isBlank()) {
-            _uiState.update { it.copy(titleError = R.string.memo_title_empty_error) }
+            _uiState.update { it.copy(titleError = R.string.error_input_title_empty) }
             isValid = false
         }
         if (description.isBlank()) {
-            _uiState.update { it.copy(descriptionError = R.string.memo_text_empty_error) }
+            _uiState.update { it.copy(descriptionError = R.string.error_input_description_empty) }
             isValid = false
         }
         return isValid

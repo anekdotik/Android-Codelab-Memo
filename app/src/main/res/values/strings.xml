@@ -1,37 +1,53 @@
 <resources>
     <string name="app_name">SAP Codelab</string>
-    <string name="action_show_all">Show All</string>
-    <string name="action_show_open">Show Open</string>
-    <string name="memo_title">Title</string>
-    <string name="new_memo">New Memo</string>
-    <string name="memo_text">Text</string>
-    <string name="action_save">Save</string>
-    <string name="memo_title_empty_error">Please provide a title for this memo</string>
-    <string name="memo_text_empty_error">Please provide a memo description</string>
-    <string name="error_update_memo">Failed to update memo</string>
-    <string name="error_load_memos">Failed to load memos"</string>
-    <string name="error_save_memo">Failed to save memo</string>
-    <string name="nav_home_label">Home</string>
-    <string name="nav_create_memo_label">Create Memo"</string>
-    <string name="nav_memo_details_label">Memo Details</string>
-    <string name="error_delete_memo">Failed to delete memo"</string>
-    <string name="error_load_memo">Failed to load memo"</string>
-    <string name="error_invalid_memo_id">Invalid memo ID"</string>
-    <string name="error_memo_not_found">Memo not found"</string>
-    <string name="notification_channel_name">Memo Reminders</string>
-    <string name="notification_channel_description">Channel for location-based memo reminders"</string>
-    <string name="nav_select_location_label">Select Location</string>
-    <string name="location_permission_denied_message">Location permission denied</string>
-    <string name="location_coordinates">Location: %f, %f</string>
-    <string name="no_location_selected">No location selected</string>
-    <string name="location_permission_rationale_title">Location permission required</string>
-    <string name="location_permission_rationale_message">Location permission is required to set a location reminder for this memo</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="notification_permission_denied">Reminder notifications cannot be shown without this permission</string>
-    <string name="background_location_permission_denied">Reminder won\'t work in the background without this permission</string>
-    <string name="background_location_permission_title">Background location permission required</string>
-    <string name="background_location_permission_message">To send you reminders when you arrive at a location even when the app is closed, please grant the \"Allow all the time\" location permission.</string>
-    <string name="error_location_not_selected">Please select a location for the reminder</string>
 
+
+    <string name="button_action_cancel">Cancel</string>
+    <string name="button_action_ok">OK</string>
+
+
+    <string name="nav_home_label">Home</string>
+    <string name="nav_create_memo_label">Create Memo</string>
+    <string name="nav_memo_details_label">Memo Details</string>
+    <string name="nav_select_location_label">Select Location</string>
+
+
+    <string name="home_menu_show_all">Show All</string>
+    <string name="home_mene_show_open">Show Open</string>
+    <string name="menu_action_save">Save</string>
+
+
+    <string name="create_memo_title">Title</string>
+    <string name="create_memo_fab_description">New Memo</string>
+    <string name="create_memo_description">Text</string>
+    <string name="create_memo_location_coordinates">Location: %f, %f</string>
+    <string name="create_memo_no_location_selected">No location selected</string>
+
+
+    <string name="notification_channel_name">Memo Reminders</string>
+    <string name="notification_channel_description">Channel for location-based memo reminders</string>
+
+
+    <string name="permission_dialog_fine_location_denied_message">Location permission denied</string>
+    <string name="permission_dialog_fine_location_rationale_title">Location permission required</string>
+    <string name="permission_dialog_fine_location_rationale_message">Location permission is required to set a location reminder for this memo</string>
+    <string name="permission_dialog_notifications_denied_message">Reminder notifications cannot be shown without this permission</string>
+    <string name="permission_dialog_background_location_denied_message">Reminder won\'t work in the background without this permission</string>
+    <string name="permission_dialog_background_location_rationale_title">Background location permission required</string>
+    <string name="permission_dialog_background_location_rationale_message">To send you reminders when you arrive at a location even when the app is closed, please grant the \"Allow all the time\" location permission.</string>
+
+
+    <string name="error_input_title_empty">Please provide a title for this memo</string>
+    <string name="error_input_description_empty">Please provide a memo description</string>
+    <string name="error_message_memo_update_failed">Failed to update memo</string>
+    <string name="error_message_memos_load_failed">Failed to load memos</string>
+    <string name="error_message_memo_save_failed">Failed to save memo</string>
+    <string name="error_message_memo_delete_failed">Failed to delete memo</string>
+    <string name="error_message_memo_load_failed">Failed to load memo</string>
+    <string name="error_message_invalid_memo_id">Invalid memo ID</string>
+    <string name="error_message_memo_not_found">Memo not found</string>
+    <string name="error_message_location_not_selected">Please select a location for the reminder</string>
+
+
+    <string name="message_memo_saved_successfully">Memo saved successfully</string>
 </resources>

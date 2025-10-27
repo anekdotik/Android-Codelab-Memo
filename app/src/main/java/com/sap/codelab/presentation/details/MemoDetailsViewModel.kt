@@ -30,7 +30,7 @@ class MemoDetailsViewModel @Inject constructor(
     private fun loadMemo() {
         val memoId = args.memoId
         if (memoId <= 0) {
-            _uiState.update { it.copy(isLoading = false, error = R.string.error_invalid_memo_id) }
+            _uiState.update { it.copy(isLoading = false, error = R.string.error_message_invalid_memo_id) }
             return
         }
 
@@ -41,10 +41,10 @@ class MemoDetailsViewModel @Inject constructor(
                 if (memo != null) {
                     _uiState.update { it.copy(isLoading = false, memo = memo) }
                 } else {
-                    _uiState.update { it.copy(isLoading = false, error = R.string.error_memo_not_found) }
+                    _uiState.update { it.copy(isLoading = false, error = R.string.error_message_memo_not_found) }
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = R.string.error_load_memo) }
+                _uiState.update { it.copy(isLoading = false, error = R.string.error_message_memo_load_failed) }
             }
         }
     }
