@@ -47,14 +47,22 @@ class CreateMemoViewModel @Inject constructor(
         }
     }
 
-    fun onLocationPermissionGranted() {
-        viewModelScope.launch {
-            _uiEvent.emit(CreateMemoContract.UiEvent.NavigateToSelectLocation)
-        }
-    }
-
     fun onLocationSelected(location: LatLng) {
         _uiState.update { it.copy(selectedLocation = location) }
+    }
+
+    fun onFineLocationPermissionResult(isGranted: Boolean, shouldShowRationale: Boolean) {
+        viewModelScope.launch {
+            if (isGranted) {
+                _uiEvent.emit(CreateMemoContract.UiEvent.NavigateToSelectLocation)
+            } else {
+                if (shouldShowRationale) {
+                    _uiEvent.emit(CreateMemoContract.UiEvent.ShowPermissionDeniedSnackbar)
+                } else {
+                    _uiEvent.emit(CreateMemoContract.UiEvent.ShowPermanentlyDeniedDialog)
+                }
+            }
+        }
     }
 
     fun onSaveClicked(

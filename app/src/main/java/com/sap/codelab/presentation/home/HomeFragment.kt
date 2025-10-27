@@ -10,8 +10,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,10 +17,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.sap.codelab.MainActivity
 import com.sap.codelab.R
-import com.sap.codelab.databinding.FragmentHomeBinding
+import com.sap.codelab.common.utils.launchAndCollectIn
 import com.sap.codelab.common.utils.viewBinding
+import com.sap.codelab.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -88,36 +86,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun observeUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    memoAdapter.submitList(state.memos)
-                    activity?.invalidateOptionsMenu()
-                }
-            }
+        viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { state ->
+            memoAdapter.submitList(state.memos)
+            activity?.invalidateOptionsMenu()
         }
     }
 
     private fun observeUiEvents() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiEvent.collect { event ->
-                    when (event) {
-                        is HomeContract.HomeUiEvent.NavigateToMemoDetail -> {
-                            val action = HomeFragmentDirections.actionNavHomeFragmentToNavMemoDetailsFragment(event.memoId)
-                            findNavController().navigate(action)
-                        }
-                        HomeContract.HomeUiEvent.NavigateToCreateMemo -> {
-                            val action = HomeFragmentDirections.actionNavHomeFragmentToNavCreateMemoFragment()
-                             findNavController().navigate(action)
-                        }
-                        is HomeContract.HomeUiEvent.ShowSnackbar -> {
-                            Snackbar.make(binding.root, getString(event.messageResId), Snackbar.LENGTH_SHORT).show()
-                        }
-                        HomeContract.HomeUiEvent.ClearErrorMessage -> {
-                            viewModel.onErrorMessageCleared()
-                        }
-                    }
+        viewModel.uiEvent.launchAndCollectIn(viewLifecycleOwner) { event ->
+            when (event) {
+                is HomeContract.HomeUiEvent.NavigateToMemoDetail -> {
+                    val action = HomeFragmentDirections.actionNavHomeFragmentToNavMemoDetailsFragment(event.memoId)
+                    findNavController().navigate(action)
+                }
+                HomeContract.HomeUiEvent.NavigateToCreateMemo -> {
+                    val action = HomeFragmentDirections.actionNavHomeFragmentToNavCreateMemoFragment()
+                     findNavController().navigate(action)
+                }
+                is HomeContract.HomeUiEvent.ShowSnackbar -> {
+                    Snackbar.make(binding.root, getString(event.messageResId), Snackbar.LENGTH_SHORT).show()
+                }
+                HomeContract.HomeUiEvent.ClearErrorMessage -> {
+                    viewModel.onErrorMessageCleared()
                 }
             }
         }

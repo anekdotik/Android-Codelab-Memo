@@ -5,14 +5,11 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.sap.codelab.R
-import com.sap.codelab.databinding.FragmentMemoDetailsBinding
+import com.sap.codelab.common.utils.launchAndCollectIn
 import com.sap.codelab.common.utils.viewBinding
+import com.sap.codelab.databinding.FragmentMemoDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MemoDetailsFragment : Fragment(R.layout.fragment_memo_details) {
@@ -26,18 +23,14 @@ class MemoDetailsFragment : Fragment(R.layout.fragment_memo_details) {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    binding.progressBar.isVisible = state.isLoading
-                    binding.errorText.isVisible = state.error != null
-                    state.error?.let { binding.errorText.text = getString(it) }
+        viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { state ->
+            binding.progressBar.isVisible = state.isLoading
+            binding.errorText.isVisible = state.error != null
+            state.error?.let { binding.errorText.text = getString(it) }
 
-                    state.memo?.let {
-                        binding.memoTitle.text = it.title
-                        binding.memoDescription.text = it.description
-                    }
-                }
+            state.memo?.let {
+                binding.memoTitle.text = it.title
+                binding.memoDescription.text = it.description
             }
         }
     }

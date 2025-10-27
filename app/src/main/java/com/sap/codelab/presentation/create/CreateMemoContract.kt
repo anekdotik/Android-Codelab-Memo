@@ -23,5 +23,8 @@ interface CreateMemoContract {
         data object ShowBackgroundLocationRationale : UiEvent
         data object RequestBackgroundLocationPermission : UiEvent
         data object RequestNotificationPermission : UiEvent
+
+        data object ShowPermissionDeniedSnackbar : UiEvent
+        data object ShowPermanentlyDeniedDialog : UiEvent
     }
 }
