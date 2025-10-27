@@ -54,7 +54,7 @@ class SelectLocationFragment : Fragment(R.layout.fragment_select_location), OnMa
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        map.uiSettings.isZoomControlsEnabled = true
+        map.uiSettings.isZoomControlsEnabled = false
 
         map.setOnMapClickListener { latLng ->
             map.clear()

@@ -21,6 +21,6 @@ class SaveMemoUseCase @Inject constructor(
     }
 
     companion object {
-        private const val GEOFENCE_RADIUS_IN_METERS = 200f
+        const val GEOFENCE_RADIUS_IN_METERS = 200f
     }
 }
