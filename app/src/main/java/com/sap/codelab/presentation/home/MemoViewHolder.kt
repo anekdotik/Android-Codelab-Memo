@@ -1,14 +1,14 @@
 package com.sap.codelab.presentation.home
 
 import androidx.recyclerview.widget.RecyclerView
-import com.sap.codelab.databinding.RecyclerviewMemoBinding
+import com.sap.codelab.databinding.ItemMemoBinding
 import com.sap.codelab.domain.model.Memo
 
 /**
  * View holder for Memos.
  */
 class MemoViewHolder(
-    private val binding: RecyclerviewMemoBinding,
+    private val binding: ItemMemoBinding,
     private val onMemoClick: (Long) -> Unit,
     private val onCheckedChange: (Memo, Boolean) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {

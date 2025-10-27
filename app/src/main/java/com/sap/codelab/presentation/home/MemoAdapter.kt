@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.sap.codelab.databinding.RecyclerviewMemoBinding
+import com.sap.codelab.databinding.ItemMemoBinding
 import com.sap.codelab.domain.model.Memo
 
 /**
@@ -16,7 +16,7 @@ class MemoAdapter(
 ) : ListAdapter<Memo, MemoViewHolder>(MemoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
-        val binding = RecyclerviewMemoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemMemoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MemoViewHolder(binding, onMemoClick, onCheckedChange)
     }
 

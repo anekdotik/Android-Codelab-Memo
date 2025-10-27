@@ -46,7 +46,7 @@ class SelectLocationFragment : Fragment(R.layout.fragment_select_location), OnMa
         map.setOnMapClickListener { latLng ->
             map.clear()
             selectedLocation = latLng
-            map.addMarker(MarkerOptions().position(latLng).title("Reminder Location"))
+            map.addMarker(MarkerOptions().position(latLng))
         }
 
         moveCameraToUserLocation()
