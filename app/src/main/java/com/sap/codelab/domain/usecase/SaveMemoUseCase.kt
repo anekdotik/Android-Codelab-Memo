@@ -16,9 +16,11 @@ class SaveMemoUseCase @Inject constructor(
     suspend operator fun invoke(memo: Memo) {
         val newId = memoRepository.saveMemo(memo)
 
-        if (memo.reminderLatitude != 0.0 || memo.reminderLongitude != 0.0) {
-            val memoWithId = memo.copy(id = newId)
-            geofenceRepository.addGeofence(memoWithId)
-        }
+        val memoWithId = memo.copy(id = newId)
+        geofenceRepository.addGeofence(memoWithId, GEOFENCE_RADIUS_IN_METERS)
+    }
+
+    companion object {
+        private const val GEOFENCE_RADIUS_IN_METERS = 200f
     }
 }

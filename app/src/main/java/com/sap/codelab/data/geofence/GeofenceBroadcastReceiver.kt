@@ -8,7 +8,6 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import com.sap.codelab.common.utils.NotificationManager
 import com.sap.codelab.di.ApplicationScope
-import com.sap.codelab.domain.repository.GeofenceRepository
 import com.sap.codelab.domain.usecase.GetMemoByIdUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +19,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     @Inject lateinit var getMemoByIdUseCase: GetMemoByIdUseCase
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var geofenceRepository: GeofenceRepository
 
     @Inject
     @ApplicationScope
@@ -49,9 +47,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         val memo = getMemoByIdUseCase(memoId)
                         memo?.let {
                             this@GeofenceBroadcastReceiver.notificationManager.showNotification(it)
-
-                            // geofenceRepository.removeGeofence(it.id)
-                            // Log.d(TAG, "One-time geofence removed for memo ID: ${it.id}")
                         } ?: Log.w(TAG, "Memo with ID $memoId not found when processing geofence event.")
                     } catch (e: Exception) {
                         Log.e(TAG, "Error processing geofence event for memo ID $memoId", e)

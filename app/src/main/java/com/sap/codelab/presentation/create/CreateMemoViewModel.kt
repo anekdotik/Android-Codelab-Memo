@@ -86,13 +86,15 @@ class CreateMemoViewModel @Inject constructor(
     private fun saveMemoAndGeofence() = viewModelScope.launch {
         val currentState = _uiState.value
         try {
-            val newMemo = Memo(
-                title = currentState.title.trim(),
-                description = currentState.description.trim(),
-                reminderLatitude = currentState.selectedLocation?.latitude ?: 0.0,
-                reminderLongitude = currentState.selectedLocation?.longitude ?: 0.0
-            )
-            saveMemoUseCase(newMemo)
+            currentState.selectedLocation?.let { location ->
+                val newMemo = Memo(
+                    title = currentState.title.trim(),
+                    description = currentState.description.trim(),
+                    reminderLatitude = currentState.selectedLocation.latitude,
+                    reminderLongitude = currentState.selectedLocation.longitude
+                )
+                saveMemoUseCase(newMemo)
+            }
             _uiState.update { it.copy(isMemoSaved = true) }
             _uiEvent.emit(CreateMemoContract.UiEvent.NavigateBack)
         } catch (e: Exception) {

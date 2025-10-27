@@ -1,8 +1,12 @@
 package com.sap.codelab.presentation.location
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -25,6 +29,15 @@ class SelectLocationFragment : Fragment(R.layout.fragment_select_location), OnMa
     private val binding by viewBinding(FragmentSelectLocationBinding::bind)
     private lateinit var map: GoogleMap
     private var selectedLocation: LatLng? = null
+
+    private val locationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                enableMyLocationOnMap()
+            } else {
+                moveCameraToDefaultLocation()
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,22 +62,35 @@ class SelectLocationFragment : Fragment(R.layout.fragment_select_location), OnMa
             map.addMarker(MarkerOptions().position(latLng))
         }
 
-        moveCameraToUserLocation()
+        checkPermissionAndSetupMap()
+    }
+
+    private fun checkPermissionAndSetupMap() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            enableMyLocationOnMap()
+        } else {
+            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
     }
 
     @SuppressLint("MissingPermission")
-    private fun moveCameraToUserLocation() {
+    private fun enableMyLocationOnMap() {
+        map.isMyLocationEnabled = true
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 val userLatLng = LatLng(location.latitude, location.longitude)
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
             } else {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_LEVEL))
+                moveCameraToDefaultLocation()
             }
         }.addOnFailureListener {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_LEVEL))
+            moveCameraToDefaultLocation()
         }
+    }
+
+    private fun moveCameraToDefaultLocation() {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_LEVEL))
     }
 
     companion object {

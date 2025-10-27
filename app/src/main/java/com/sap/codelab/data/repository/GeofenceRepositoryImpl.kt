@@ -34,7 +34,7 @@ class GeofenceRepositoryImpl @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    override suspend fun addGeofence(memo: Memo): Result<Unit> = runCatching {
+    override suspend fun addGeofence(memo: Memo, radiusInMeters: Float): Result<Unit> = runCatching {
         if (memo.reminderLatitude == 0.0 && memo.reminderLongitude == 0.0) {
             Log.w(TAG, "Skipping geofence for memo ${memo.id}: no valid reminder location set.")
             return Result.success(Unit)
@@ -45,7 +45,7 @@ class GeofenceRepositoryImpl @Inject constructor(
             .setCircularRegion(
                 memo.reminderLatitude,
                 memo.reminderLongitude,
-                GEOFENCE_RADIUS_IN_METERS
+                radiusInMeters
             )
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
@@ -73,7 +73,6 @@ class GeofenceRepositoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "GeofenceRepository"
-        private const val GEOFENCE_RADIUS_IN_METERS = 200f
         private const val GEOFENCE_INTENT_REQUEST_CODE = 0
     }
 }

@@ -2,8 +2,9 @@
     <string name="app_name">SAP Codelab</string>
 
 
-    <string name="button_action_cancel">Cancel</string>
-    <string name="button_action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_settings">Open Settings</string>
 
 
     <string name="nav_home_label">Home</string>
@@ -35,6 +36,8 @@
     <string name="permission_dialog_background_location_denied_message">Reminder won\'t work in the background without this permission</string>
     <string name="permission_dialog_background_location_rationale_title">Background location permission required</string>
     <string name="permission_dialog_background_location_rationale_message">To send you reminders when you arrive at a location even when the app is closed, please grant the \"Allow all the time\" location permission.</string>
+    <string name="permission_dialog_permanently_denied_title">Location permission permanently denied</string>
+    <string name="permission_dialog_permanently_denied_message">You have permanently denied the location permission. Please grant it from the app settings.</string>
 
 
     <string name="error_input_title_empty">Please provide a title for this memo</string>

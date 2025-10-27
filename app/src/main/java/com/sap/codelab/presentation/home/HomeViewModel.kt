@@ -95,14 +95,6 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Call this when the Create Memo screen returns successfully, to refresh the list.
-     * Refreshes the memo list based on the current filter.
-     */
-    fun onCreateMemoSuccess() {
-        loadMemos(isShowAll = _uiState.value.isShowAllMemosSelected)
-    }
-
-    /**
      * Clears any error message displayed in the UI's UiState.
      * This should be called by the UI after it has processed and displayed a persistent error.
      */

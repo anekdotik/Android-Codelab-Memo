@@ -1,9 +1,12 @@
 package com.sap.codelab.presentation.create
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -41,7 +44,11 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
             if (isGranted) {
                 viewModel.onLocationPermissionGranted()
             } else {
-                Snackbar.make(binding.root, R.string.permission_dialog_fine_location_denied_message, Snackbar.LENGTH_LONG).show()
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    showPermanentlyDeniedDialog()
+                } else {
+                    Snackbar.make(binding.root, R.string.permission_dialog_fine_location_denied_message, Snackbar.LENGTH_LONG).show()
+                }
             }
         }
 
@@ -136,10 +143,10 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.permission_dialog_fine_location_rationale_title)
             .setMessage(R.string.permission_dialog_fine_location_rationale_message)
-            .setPositiveButton(R.string.button_action_ok) { _, _ ->
+            .setPositiveButton(R.string.action_ok) { _, _ ->
                 fineLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
-            .setNegativeButton(R.string.button_action_cancel, null)
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
 
@@ -147,10 +154,24 @@ class CreateMemoFragment : Fragment(R.layout.fragment_create_memo) {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.permission_dialog_background_location_rationale_title)
             .setMessage(R.string.permission_dialog_background_location_rationale_message)
-            .setPositiveButton(R.string.button_action_ok) { _, _ ->
+            .setPositiveButton(R.string.action_ok) { _, _ ->
                 viewModel.onBackgroundRationaleAccepted()
             }
-            .setNegativeButton(R.string.button_action_cancel, null)
+            .setNegativeButton(R.string.action_cancel, null)
+            .show()
+    }
+
+    private fun showPermanentlyDeniedDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.permission_dialog_permanently_denied_title)
+            .setMessage(R.string.permission_dialog_permanently_denied_message)
+            .setPositiveButton(R.string.action_settings) { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", requireContext().packageName, null)
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
 

@@ -93,7 +93,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 viewModel.uiState.collect { state ->
                     memoAdapter.submitList(state.memos)
                     activity?.invalidateOptionsMenu()
-                    // binding.progressBar.isVisible = state.isLoading
                 }
             }
         }

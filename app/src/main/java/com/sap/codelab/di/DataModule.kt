@@ -19,9 +19,9 @@ internal object DataModule {
     @Singleton
     fun provideMemoDatabase(@ApplicationContext context: Context): MemoDatabase {
         return Room.databaseBuilder(
-            context,
-            MemoDatabase::class.java,
-            DATABASE_NAME
+            context = context,
+            klass = MemoDatabase::class.java,
+            name = DATABASE_NAME
         ).build()
     }
 
